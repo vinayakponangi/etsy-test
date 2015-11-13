@@ -2,5 +2,5 @@
 Top 5 words for each shop on Etsy
 
 Way to run the class -
-run_etsy_job.py <apiKey>  
+python run_etsy_job.py <apiKey> (apiKey is an alphanumeric key provided by etsy) 
 
