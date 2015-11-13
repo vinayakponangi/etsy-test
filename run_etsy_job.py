@@ -1,14 +1,14 @@
 import requests,json
 import re
-#from collections import OrderedDict
 import collections
 from operator import itemgetter
 from mrjob.job import MRJob
+import sys
 
 class Etsy:
 
-	def __init__(self):
-		self.apiKey = ''
+	def __init__(self,apiKey):
+		self.apiKey = apiKey
 		self.baseUrl = 'https://openapi.etsy.com/v2/'
 
 	def getJSONResponse(self,url):
@@ -67,5 +67,9 @@ class Etsy:
 
 		print first5Words
 
-etsy = Etsy()
+try:
+	apiKey = sys.argv[1]
+except IndexError:
+	sys.exit("apiKey can't be null")
+etsy = Etsy(apiKey)
 dictShopDescription = etsy.runChallenge()	
