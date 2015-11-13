@@ -1,8 +1,6 @@
 import requests,json
 import re
 import collections
-from operator import itemgetter
-from mrjob.job import MRJob
 import sys
 
 class Etsy:
@@ -15,8 +13,8 @@ class Etsy:
 		resp = requests.get(url,parameters)
            	return json.loads(resp.text)
 
-	def completeURL(self,urlParameters):
- 		url =  "%s%s" % (self.baseUrl,urlParameters)
+	def completeURL(self,url):
+ 		url =  "%s%s" % (self.baseUrl,url)
 		return url
 
 	def getAllListingDescriptionsForShop(self,shop) : 
