@@ -11,18 +11,18 @@ class Etsy:
 		self.apiKey = apiKey
 		self.baseUrl = 'https://openapi.etsy.com/v2/'
 
-	def getJSONResponse(self,url):
-		resp = requests.get(url)
+	def getJSONResponse(self,url,parameters):
+		resp = requests.get(url,parameters)
            	return json.loads(resp.text)
 
 	def completeURL(self,urlParameters):
- 		url =  "%s%sapi_key=%s" % (self.baseUrl,urlParameters,self.apiKey)
+ 		url =  "%s%s" % (self.baseUrl,urlParameters)
 		return url
 
 	def getAllListingDescriptionsForShop(self,shop) : 
 		list = []
-		url = self.completeURL('shops/%s/listings/active?' % shop)
-		data =  self.getJSONResponse(url)
+		url = self.completeURL('shops/%s/listings/active' % shop)
+		data =  self.getJSONResponse(url,{'api_key':self.apiKey})
  		listingCount = data['count']
 		listings = data['results']
 		descriptionString = ""
@@ -33,8 +33,11 @@ class Etsy:
 
 	def runChallenge(self):
 		# This gets the featured 50 shops from etsy
-		url = self.completeURL('shops?limit=50&offset=0&')
-		data = self.getJSONResponse(url) 
+		url = self.completeURL('shops')
+		data = self.getJSONResponse(url,{'limit':'50','offset':'0','api_key':self.apiKey}) 
+		
+		# Not paginating, since the no. of listings returned per shop are consistently lower than 50
+		
 		shops = data['results']
 
 		#empty dict to store shop and totalDescriptionString
