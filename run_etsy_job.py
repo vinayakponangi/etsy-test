@@ -28,7 +28,7 @@ class Etsy:
 		descriptionString = ""
 		for listing in listings:
 			descriptionString+=" " + listing['description'].replace("\n"," ")
-#		description =  (' '.join(listing['description']) for listing in listings)
+		description =  (' '.join(listing['description']) for listing in listings)
 		return descriptionString
 
 	def runChallenge(self):
@@ -45,27 +45,29 @@ class Etsy:
 			shopDescriptionMap[shop['shop_name']] = description 
 		
 		for shop in shopDescriptionMap:
-			print shop
-			self.getTop5wordsForShop(shopDescriptionMap[shop])		
-
+			wordList = self.getTop5wordsForShop(shopDescriptionMap[shop])		
+			print "%s = %s" % (shop,wordList)
 
 
 	def getTop5wordsForShop(self,description):
 		map = {}
 		words = description.split()
 		for word in words:
+			# requests gets unicode data. Encoding back to utf-8
 			lowerWord = word.lower().encode('utf-8').strip()
+			
+			# Curating word to substitute any letter which is not alphanumeric
 			curatedWord = re.sub('[^A-Za-z0-9]+','', lowerWord)
+
+			# Not using fancy nltk to do stop words and stemming
+			# To avoid lots of and's and or's etc. Trying to only 
+			#  look for words that are more than 3 letters in length
 			word = curatedWord if len(curatedWord) > 3 else None
 			if curatedWord in map:
 				map[word]+=1
 			else:
 				map[word]=1
-#		orderedWords = OrderedDict(sorted(map.items(), key=lambda t: t[1],reverse=True)) 
-#		first5Words = {k: orderedWords[k] for k in orderedWords.keys()[:5]}	
-		first5Words = collections.Counter(map).most_common(5)
-
-		print first5Words
+		return collections.Counter(map).most_common(5)
 
 try:
 	apiKey = sys.argv[1]
